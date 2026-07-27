@@ -12,6 +12,32 @@ A full-stack, responsive, and gamified clone of Duolingo built with Next.js (Typ
 
 ---
 
+## 📂 Project Structure
+
+```
+duolingo-assignment/
+├── backend/
+│   ├── app/
+│   │   ├── api/             # API Routers (courses, lessons, progress, etc.)
+│   │   ├── core/            # Config variables & business logic
+│   │   ├── database/        # Database setup and seed data scripts
+│   │   ├── models/          # SQLAlchemy Database Models & Enums
+│   │   ├── schemas/         # Pydantic Schemas for Request/Response validation
+│   │   └── main.py          # FastAPI Application initialization
+│   ├── render_build.sh      # Render build configuration script
+│   └── requirements.txt     # Python backend dependencies
+└── frontend/
+    ├── src/
+    │   ├── components/      # Reusable React components (Sidebar, Lesson card, etc.)
+    │   ├── pages/           # Next.js Pages & Routes (Learn, Leaderboard, Shop, etc.)
+    │   ├── styles/          # Tailwind & custom CSS styles
+    │   └── utils/           # Frontend API connection utility
+    ├── package.json         # Frontend Node dependencies & scripts
+    └── tailwind.config.js   # Styling configuration
+```
+
+---
+
 ## 🏛 Architecture Overview
 
 The application is split into two decoupled layers communicating over a standard RESTful JSON API:
@@ -205,11 +231,11 @@ The backend exposes the following REST endpoints (Base URL: `http://localhost:80
    ```
 4. Seed your SQLite database with Spanish curriculum and achievements:
    ```bash
-   python seed.py
+   python -m app.database.seed
    ```
 5. Run the FastAPI development server:
    ```bash
-   uvicorn main:app --reload --port 8000
+   uvicorn app.main:app --reload --port 8000
    ```
    *The interactive docs are visible at `http://localhost:8000/docs`.*
 
