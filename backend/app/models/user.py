@@ -12,9 +12,8 @@ class User(Base):
     password_hash = Column(String(255), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    # Gamification state (fast-read fields, not event log)
     total_xp = Column(Integer, default=0)
-    gems = Column(Integer, default=500)  # mocked currency
+    gems = Column(Integer, default=500)  
     hearts = Column(Integer, default=5)
     max_hearts = Column(Integer, default=5)
     hearts_last_lost_at = Column(DateTime, nullable=True)

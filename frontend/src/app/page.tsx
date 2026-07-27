@@ -49,15 +49,9 @@ export default function PathScreen() {
   const [tab, setTab] = useState<string>("learn");
   const [userProfile, setUserProfile] = useState<any>(null);
   const [coursePath, setCoursePath] = useState<any>(null);
-  
-  // Lesson state
   const [activeLessonId, setActiveLessonId] = useState<number | null>(null);
-  
-  // Popup state
   const [selectedSkill, setSelectedSkill] = useState<any>(null);
   const [pressedSkillId, setPressedSkillId] = useState<number | null>(null);
-  
-  // Loading & updates
   const [loading, setLoading] = useState<boolean>(true);
   const [xpToday, setXpToday] = useState<number>(0);
   const [isSuper, setIsSuper] = useState<boolean>(false);
@@ -79,14 +73,10 @@ export default function PathScreen() {
     try {
       const profile = await api.getProfile();
       setUserProfile(profile);
-      
       const path = await api.getCoursePath(1);
       setCoursePath(path);
 
-      // Simple calculation of today's XP using daily activity
-      // ALEX profile starts with 40 total XP and 3 days of previous activity.
-      // Let's check xp_earned from daily activity.
-      setXpToday(profile.total_xp % 30); // Simple mock metric based on daily goal loop
+      setXpToday(profile.total_xp % 30); 
     } catch (err) {
       console.error("Failed to load user path data", err);
     } finally {
@@ -119,13 +109,10 @@ export default function PathScreen() {
   };
 
   const handleStartLesson = (skill: any) => {
-    // Each skill has lessons. Greetings has lesson 1 and lesson 2.
-    // Fetch first uncompleted or just first lesson for simplicity.
     if (skill.lessons && skill.lessons.length > 0) {
       setActiveLessonId(skill.lessons[0].id);
       setSelectedSkill(null);
     } else {
-      // Seed fallback
       setActiveLessonId(skill.id); 
       setSelectedSkill(null);
     }
@@ -134,7 +121,7 @@ export default function PathScreen() {
   const handleLessonPlayerClose = (xpEarned?: number) => {
     setActiveLessonId(null);
     if (xpEarned) {
-      loadData(); // Refresh stats
+      loadData(); 
     }
   };
 
@@ -147,7 +134,6 @@ export default function PathScreen() {
     );
   }
 
-  // Active Lesson Mode
   if (activeLessonId) {
     return (
       <LessonPlayer 
@@ -160,12 +146,9 @@ export default function PathScreen() {
 
   return (
     <div className="h-screen bg-[#0E1418] font-sans flex text-white overflow-hidden">
-      {/* Sidebar Navigation */}
       <Sidebar currentTab={tab} setTab={setTab} />
 
-      {/* Main Container */}
       <div className="flex-1 h-screen overflow-y-auto flex flex-col">
-        {/* Mobile Navbar */}
         <div className="md:hidden flex items-center justify-between px-6 py-4 border-b border-[#20282E] bg-[#0E1418]">
           <span className="text-2xl font-black text-[#58CC02]">duolingo</span>
           <div className="flex items-center gap-3">
@@ -176,7 +159,6 @@ export default function PathScreen() {
           </div>
         </div>
 
-        {/* Content Tabs */}
         <div className="flex-1 px-6 py-6 max-w-2xl mx-auto w-full pb-20">
           {userProfile && (
             <StatsBar 
@@ -190,13 +172,11 @@ export default function PathScreen() {
           {tab === "learn" && coursePath && (
             <div className="flex flex-col gap-6">
               {coursePath.units.map((unit: any) => {
-                // Find first uncompleted (available) skill in unit to position Duo mascot
                 const activeSkillIdx = unit.skills.findIndex((s: any) => s.status === "available");
                 const currentSkillId = unit.skills.find((s: any) => s.status === "available")?.id;
 
                 return (
                   <div key={unit.id} className="flex flex-col gap-6">
-                    {/* Unit banner */}
                     <div className="rounded-3xl p-6 flex items-center justify-between shadow-lg" style={{ background: unit.color_theme }}>
                       <div>
                         <span className="text-[10px] font-black uppercase tracking-wider text-white/80">
@@ -210,7 +190,6 @@ export default function PathScreen() {
                       </button>
                     </div>
 
-                    {/* Skill winding path */}
                     <div className="flex flex-col items-center gap-10 py-10 relative">
                       {unit.skills.map((skill: any, idx: number) => {
                         const isLocked = skill.status === "locked";
@@ -220,14 +199,12 @@ export default function PathScreen() {
 
                         const Icon = ICONS[skill.icon] || BookOpen;
                         const themeColor = unit.color_theme;
-                        
                         return (
                           <div
                             key={skill.id}
                             className="relative flex items-center justify-center"
                             style={{ transform: `translateX(${offset}px)` }}
                           >
-                            {/* Dashboard ring indicator if active */}
                             {isCurrent && (
                               <div
                                 className="absolute rounded-full border-4 border-dashed animate-[spin_12s_linear_infinite]"
@@ -239,7 +216,6 @@ export default function PathScreen() {
                               />
                             )}
 
-                            {/* Back shadow disc */}
                             <div
                               className="absolute rounded-full"
                               style={{
@@ -250,7 +226,6 @@ export default function PathScreen() {
                               }}
                             />
 
-                            {/* Node Button */}
                             <button
                               onClick={() => handleSkillNodeClick(skill)}
                               className="relative flex items-center justify-center rounded-full transition-all duration-100 active:translate-y-[6px]"
@@ -268,7 +243,6 @@ export default function PathScreen() {
                                 <Icon size={28} color={isLocked ? COLORS.lockedIcon : "#FFF"} strokeWidth={2.5} />
                               )}
 
-                              {/* Crown level indicator */}
                               {isCompleted && skill.crown_level > 0 && (
                                 <div className="absolute -bottom-1.5 -right-1.5 bg-[#FFC800] border-2 border-[#0E1418] text-[#3C3C3C] text-[10px] font-black rounded-full w-6 h-6 flex items-center justify-center select-none shadow">
                                   {skill.crown_level}
@@ -276,7 +250,6 @@ export default function PathScreen() {
                               )}
                             </button>
 
-                            {/* Floating Mascot placement next to the current skill node */}
                             {idx === activeSkillIdx && (
                               <div
                                 className="absolute pointer-events-none select-none z-10"
@@ -363,7 +336,6 @@ export default function PathScreen() {
         </div>
       </div>
 
-      {/* Lesson Details Sheets Popover */}
       {selectedSkill && (
         <div className="fixed inset-0 z-30 flex items-end sm:items-center justify-center bg-black/60 p-4 animate-fade-in">
           <div className="w-full max-w-sm rounded-3xl p-6 bg-[#131F24] border border-[#232C33] shadow-2xl flex flex-col gap-5 text-center">
@@ -372,7 +344,6 @@ export default function PathScreen() {
                 <X size={20} />
               </button>
             </div>
-            
             <div className="flex flex-col items-center gap-3">
               <div 
                 className="w-16 h-16 rounded-full flex items-center justify-center shadow-inner"

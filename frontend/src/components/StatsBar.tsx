@@ -34,7 +34,6 @@ export function StatsBar({ user, xpToday, onRefill, isSuper }: StatsBarProps) {
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    
     const updateRegenTimer = async () => {
       try {
         const status = await api.getHearts();
@@ -67,7 +66,6 @@ export function StatsBar({ user, xpToday, onRefill, isSuper }: StatsBarProps) {
     return () => clearInterval(timer);
   }, [user.hearts]);
 
-  // Close language dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (langRef.current && !langRef.current.contains(e.target as Node)) {
@@ -100,7 +98,6 @@ export function StatsBar({ user, xpToday, onRefill, isSuper }: StatsBarProps) {
   return (
     <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between bg-[#131F24]/40 p-4 rounded-3xl border border-[#232C33]/60">
       <div className="flex items-center gap-3 flex-1">
-        {/* Language Selector */}
         <div className="relative" ref={langRef}>
           <button
             onClick={() => setLangOpen(!langOpen)}

@@ -4,7 +4,6 @@ from app.schemas.profile import UserOut, UserProfileOut, LeaderboardEntryOut, Ac
 from app.schemas.lesson import LessonAttemptStartOut, AnswerSubmitIn, AnswerSubmitOut, LessonCompleteOut
 from app.schemas.progress import HeartsStatusOut, StreakOut, DailyGoalOut
 
-# Rebuild models to resolve forward declarations/circular refs
 UserProfileOut.model_rebuild()
 LessonCompleteOut.model_rebuild()
 

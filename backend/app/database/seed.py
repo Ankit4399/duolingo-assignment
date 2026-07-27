@@ -182,7 +182,6 @@ def seed(session: Session) -> None:
 
 def main() -> None:
     engine = create_engine(DATABASE_URL, echo=False)
-    # Import models here to make sure they are registered on Base before dropping/creating
     import app.models
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)

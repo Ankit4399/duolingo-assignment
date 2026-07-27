@@ -10,7 +10,6 @@ class Skill(Base):
     order = Column(Integer, nullable=False)
     title = Column(String(100), nullable=False)
     icon = Column(String(50), default="book")
-    # what must be completed before this unlocks (self-referential, nullable)
     unlock_requires_skill_id = Column(Integer, ForeignKey("skills.id"), nullable=True)
     max_crowns = Column(Integer, default=5)
 

@@ -67,7 +67,6 @@ export function Shop({ user, setUser, isSuper, setIsSuper }: ShopProps) {
 
   return (
     <div className="max-w-2xl mx-auto w-full py-4 flex flex-col gap-6">
-      {/* Super Duolingo Promotion Banner */}
       <div className={`relative overflow-hidden rounded-3xl p-6 border transition-all duration-300 ${
         isSuper 
           ? "bg-gradient-to-r from-[#E3A857] via-[#F1C40F] to-[#F39C12] border-[#F1C40F] shadow-lg shadow-[#F1C40F]/15" 
@@ -101,11 +100,9 @@ export function Shop({ user, setUser, isSuper, setIsSuper }: ShopProps) {
         </div>
       </div>
 
-      {/* Shop items */}
       <div className="flex flex-col gap-4">
         <h3 className="text-lg font-black text-white px-1">Power-ups & Refills</h3>
 
-        {/* Refill Hearts */}
         <div className="bg-[#131F24] border border-[#232C33] rounded-3xl p-5 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="bg-[#FF4B4B]/10 p-3 rounded-full border border-[#FF4B4B]/25">
@@ -125,7 +122,6 @@ export function Shop({ user, setUser, isSuper, setIsSuper }: ShopProps) {
           </button>
         </div>
 
-        {/* Streak Freeze */}
         <div className="bg-[#131F24] border border-[#232C33] rounded-3xl p-5 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="bg-[#FF9600]/10 p-3 rounded-full border border-[#FF9600]/25">
@@ -146,7 +142,6 @@ export function Shop({ user, setUser, isSuper, setIsSuper }: ShopProps) {
         </div>
       </div>
 
-      {/* Checkout Modal */}
       {showCheckout && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
           <div className="w-full max-w-md bg-[#131F24] border border-[#232C33] rounded-3xl p-6 shadow-2xl relative">
@@ -160,7 +155,6 @@ export function Shop({ user, setUser, isSuper, setIsSuper }: ShopProps) {
                   This is a mock check-out form simulating an in-app purchase. No real money will be charged.
                 </p>
 
-                {/* Mock Card Form */}
                 <div className="flex flex-col gap-3 text-left mt-2">
                   <div>
                     <label className="text-[10px] font-bold uppercase tracking-wider text-[#8A97A0]">Card Number</label>

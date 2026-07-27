@@ -10,7 +10,7 @@ class Achievement(Base):
     name = Column(String(100), nullable=False)
     description = Column(String(255))
     icon = Column(String(50), default="trophy")
-    criteria_type = Column(String(50))   # e.g. "streak", "total_xp", "skills_completed"
+    criteria_type = Column(String(50))   
     criteria_value = Column(Integer)
 
 

@@ -49,3 +49,6 @@ ENV/
 *.njsproj
 *.sln
 *.sw?
+
+
+cleanup_comments.py

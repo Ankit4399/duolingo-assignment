@@ -23,7 +23,7 @@ interface UserProfile {
   achievements: Achievement[];
 }
 
-// Mocked friends data
+
 const SEEDED_FRIENDS = [
   { id: 101, username: "maria", xp: 120, streak: 7, status: "friend", avatar_color: "#FF6B6B" },
   { id: 102, username: "sam", xp: 75, streak: 2, status: "friend", avatar_color: "#1CB0F6" },
@@ -79,9 +79,7 @@ export function Profile({ isSuper }: ProfileProps) {
 
   return (
     <div className="max-w-2xl mx-auto w-full py-4 flex flex-col gap-6">
-      
 
-      {/* Header card */}
       <div className={`bg-[#131F24] border rounded-3xl p-6 flex items-center gap-6 ${
         isSuper ? "border-[#F1C40F]/30" : "border-[#232C33]"
       }`}>
@@ -110,7 +108,6 @@ export function Profile({ isSuper }: ProfileProps) {
         </div>
       </div>
 
-      {/* Stats grid */}
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-[#131F24] border border-[#232C33] rounded-3xl p-5 flex items-center gap-4">
           <Flame size={32} color="#FF9600" fill="#FF9600" className="bounce-slow" />
@@ -142,7 +139,6 @@ export function Profile({ isSuper }: ProfileProps) {
         </div>
       </div>
 
-      {/* Friends Section */}
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between px-1">
           <h3 className="text-lg font-black text-white flex items-center gap-2">
@@ -151,7 +147,6 @@ export function Profile({ isSuper }: ProfileProps) {
           <span className="text-xs font-bold text-[#8A97A0]">{currentFriends.length} friends</span>
         </div>
 
-        {/* Current Friends */}
         {currentFriends.map((friend) => (
           <div key={friend.id} className="bg-[#131F24] border border-[#232C33] rounded-3xl p-4 flex items-center justify-between hover:border-[#333E46] transition-colors duration-150">
             <div className="flex items-center gap-3">
@@ -174,7 +169,6 @@ export function Profile({ isSuper }: ProfileProps) {
           </div>
         ))}
 
-        {/* Suggested Friends */}
         {suggestedFriends.length > 0 && (
           <>
             <div className="flex items-center gap-2 px-1 mt-2">
@@ -209,7 +203,6 @@ export function Profile({ isSuper }: ProfileProps) {
         )}
       </div>
 
-      {/* Achievements section */}
       <div className="flex flex-col gap-3">
         <h3 className="text-lg font-black text-white px-1">Unlocked Achievements</h3>
         {profile.achievements.length === 0 ? (

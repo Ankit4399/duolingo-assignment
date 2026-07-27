@@ -32,7 +32,7 @@ def compute_streak(activity_dates: list[date], today: date) -> int:
     most_recent = max(days)
 
     if (today - most_recent).days > 1:
-        return 0  # streak broken
+        return 0  
 
     streak = 0
     cursor = most_recent

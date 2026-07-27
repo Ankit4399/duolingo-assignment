@@ -13,7 +13,6 @@ def get_course_path(
     course_id: int,
     db: Session = Depends(get_db),
 ):
-    # Get current user ID helper or inline
     user_id = DEFAULT_USER_ID
     course = db.get(models.Course, course_id)
     if not course:

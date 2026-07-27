@@ -22,21 +22,17 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [currentIdx, setCurrentIdx] = useState<number>(0);
   const [hearts, setHearts] = useState<number>(5);
-  
-  // Input states
-  const [selectedOption, setSelectedOption] = useState<string>(""); // multiple_choice, fill_blank
-  const [typeAnswer, setTypeAnswer] = useState<string>(""); // type_answer
-  const [selectedWords, setSelectedWords] = useState<string[]>([]); // translate word_bank
-  const [matchedPairs, setMatchedPairs] = useState<[string, string][]>([]); // match_pairs
+  const [selectedOption, setSelectedOption] = useState<string>(""); 
+  const [typeAnswer, setTypeAnswer] = useState<string>(""); 
+  const [selectedWords, setSelectedWords] = useState<string[]>([]); 
+  const [matchedPairs, setMatchedPairs] = useState<[string, string][]>([]); 
   const [matchSelection, setMatchSelection] = useState<string | null>(null);
 
-  // Speak exercise states
   const [isListening, setIsListening] = useState<boolean>(false);
   const [speakTranscript, setSpeakTranscript] = useState<string>("");
   const [speakDone, setSpeakDone] = useState<boolean>(false);
   const recognitionRef = useRef<any>(null);
 
-  // Flow states
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [isCorrect, setIsCorrect] = useState<boolean>(false);
   const [correctAnswerRevealed, setCorrectAnswerRevealed] = useState<any>(null);
@@ -65,10 +61,8 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
     startAttempt();
   }, [lessonId]);
 
-  // Text to Speech
   const speak = (text: string) => {
     if (typeof window !== "undefined" && window.speechSynthesis) {
-      // Find Spanish voice if possible, otherwise default
       const utterance = new SpeechSynthesisUtterance(text);
       const voices = window.speechSynthesis.getVoices();
       const esVoice = voices.find(v => v.lang.startsWith("es"));
@@ -79,7 +73,6 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
 
   useEffect(() => {
     if (currentExercise) {
-      // Read out prompt if Spanish or translate bank
       if (currentExercise.type === "translate") {
         speak(currentExercise.prompt.replace("Translate: ", ""));
       } else if (currentExercise.type === "fill_blank") {
@@ -88,7 +81,6 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
     }
   }, [currentIdx, exercises]);
 
-  // Answer formulation helpers
   const handleWordTap = (word: string) => {
     if (selectedWords.includes(word)) {
       setSelectedWords(prev => prev.filter(w => w !== word));
@@ -105,7 +97,6 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
         setMatchSelection(null);
         return;
       }
-      // Check if it's a match against seeded pairs
       const pairs = currentExercise.content.pairs as [string, string][];
       const isValidPair = pairs.some(p => 
         (p[0] === matchSelection && p[1] === val) || 
@@ -115,14 +106,12 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
       if (isValidPair) {
         setMatchedPairs(prev => [...prev, [matchSelection, val]]);
       } else {
-        // Flash red
         alert("Incorrect pair match!");
       }
       setMatchSelection(null);
     }
   };
 
-  // Submit check
   const handleCheck = async () => {
     if (!attemptId || !currentExercise) return;
 
@@ -134,7 +123,6 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
     } else if (currentExercise.type === "translate") {
       payloadAnswer = selectedWords;
     } else if (currentExercise.type === "match_pairs") {
-      // If they matched all pairs, submit them
       payloadAnswer = matchedPairs;
     } else if (currentExercise.type === "speak") {
       payloadAnswer = speakTranscript || "(spoken)";
@@ -156,7 +144,6 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
   };
 
   const handleContinue = async () => {
-    // Reset exercise states
     setSelectedOption("");
     setTypeAnswer("");
     setSelectedWords([]);
@@ -171,14 +158,12 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
     if (currentIdx + 1 < exercises.length) {
       setCurrentIdx(prev => prev + 1);
     } else {
-      // Complete lesson!
       if (!attemptId) return;
       try {
         setLoading(true);
         const data = await api.completeLessonAttempt(attemptId);
         setCompleteData(data);
         setIsLessonComplete(true);
-        // Fire confetti!
         confetti({
           particleCount: 100,
           spread: 70,
@@ -266,12 +251,10 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
     );
   }
 
-  // Calculate progress percent
   const progressPct = Math.round(((currentIdx) / exercises.length) * 100);
 
   return (
     <div className="fixed inset-0 bg-[#0E1418] z-40 flex flex-col">
-      {/* Header */}
       <div className="max-w-2xl mx-auto w-full px-6 py-6 flex items-center justify-between gap-4">
         <button onClick={() => onClose()} className="text-[#7C8890] hover:text-white">
           <X size={24} />
@@ -288,7 +271,6 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
         </div>
       </div>
 
-      {/* Main Content Area */}
       <div className="flex-1 max-w-2xl mx-auto w-full px-6 py-4 flex flex-col justify-center gap-6 overflow-y-auto">
         {currentExercise && (
           <div className="flex flex-col gap-6">
@@ -303,7 +285,6 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
               </button>
             </h3>
 
-            {/* Renderer Switch */}
             {currentExercise.type === "multiple_choice" && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 {currentExercise.content.options.map((opt: string) => (
@@ -360,7 +341,6 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
 
             {currentExercise.type === "translate" && (
               <div className="flex flex-col gap-6">
-                {/* Sentence slots */}
                 <div className="min-h-[64px] p-4 rounded-2xl border-2 border-[#232C33] bg-[#0E1418] flex flex-wrap gap-2 items-center">
                   {selectedWords.map((word) => (
                     <button
@@ -374,7 +354,6 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
                   ))}
                 </div>
 
-                {/* Word bank */}
                 <div className="flex flex-wrap gap-2 justify-center py-2">
                   {currentExercise.content.word_bank.map((word: string) => {
                     const isUsed = selectedWords.includes(word);
@@ -400,10 +379,8 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
             {currentExercise.type === "match_pairs" && (
               <div className="grid grid-cols-2 gap-3.5 max-w-sm mx-auto w-full">
                 {(() => {
-                  // Flatten options list (shuffled)
                   const pairs = currentExercise.content.pairs as [string, string][];
                   const allWords = Array.from(new Set(pairs.flat()));
-                  
                   return allWords.map((word) => {
                     const isAlreadyMatched = matchedPairs.some(p => p.includes(word));
                     const isSelected = matchSelection === word;
@@ -430,17 +407,14 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
             )}
           {currentExercise.type === "speak" && (
               <div className="flex flex-col items-center gap-6 py-4">
-                {/* Sentence to speak */}
                 <div className="p-5 rounded-2xl bg-[#131F24] border border-[#232C33] font-black text-center text-lg text-white w-full">
                   {currentExercise.content.sentence}
                 </div>
 
-                {/* Microphone Button */}
                 <button
                   disabled={isChecked || speakDone}
                   onClick={() => {
                     if (isListening) {
-                      // Stop listening
                       if (recognitionRef.current) {
                         recognitionRef.current.stop();
                       }
@@ -448,7 +422,6 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
                       return;
                     }
 
-                    // Try Web Speech API
                     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
                     if (SpeechRecognition) {
                       const recognition = new SpeechRecognition();
@@ -469,14 +442,12 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
                       };
                       recognition.onerror = () => {
                         setIsListening(false);
-                        // Fallback: simulate success
                         setSpeakTranscript(currentExercise.content.sentence);
                         setSpeakDone(true);
                       };
                       recognition.start();
                       setIsListening(true);
                     } else {
-                      // No browser support — simulate after delay
                       setIsListening(true);
                       setSpeakTranscript("");
                       setTimeout(() => {
@@ -494,7 +465,6 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
                       : "bg-[#1CB0F6] border-2 border-[#1CB0F6] text-white hover:brightness-110"
                   }`}
                 >
-                  {/* Ripple rings when listening */}
                   {isListening && (
                     <>
                       <span className="absolute inset-0 rounded-full border-2 border-[#FF4B4B] animate-ping opacity-30" />
@@ -518,7 +488,6 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
                     : "Tap the microphone and speak"}
                 </span>
 
-                {/* Transcript Preview */}
                 {speakTranscript && (
                   <div className="w-full p-4 rounded-2xl border border-[#232C33] bg-[#0E1418] text-center">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-[#8A97A0] block mb-1.5">Your speech</span>
@@ -531,7 +500,6 @@ export function LessonPlayer({ lessonId, onClose, isSuper }: LessonPlayerProps) 
         )}
       </div>
 
-      {/* Footer bar containing Check/Continue controls */}
       <div className={`mt-auto border-t py-6 ${
         isChecked 
           ? isCorrect 
