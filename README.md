@@ -1,4 +1,4 @@
-# Duolingo Web App Clone - Fullstack SDE Assignment
+# Duolingo Web App
 
 A full-stack, responsive, and gamified clone of Duolingo built with Next.js (TypeScript & Tailwind CSS) and FastAPI (Python, SQLAlchemy, & SQLite).
 
