@@ -1,31 +1,20 @@
 from datetime import datetime, timedelta
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-from models import (
-    Base,
-    Achievement,
-    Course,
-    DailyActivity,
-    Exercise,
-    ExerciseAttempt,
-    ExerciseType,
-    Lesson,
-    LessonAttempt,
-    LessonType,
-    Skill,
-    SkillStatus,
-    Unit,
-    User,
-    UserSkillProgress,
-)
-
-DATABASE_URL = "sqlite:///./duolingo.db"
-
+from app.core.config import DATABASE_URL
+from app.models.base import Base
+from app.models.enums import ExerciseType, SkillStatus, LessonType
+from app.models.achievement import Achievement, UserAchievement
+from app.models.course import Course
+from app.models.unit import Unit
+from app.models.skill import Skill
+from app.models.lesson import Lesson
+from app.models.exercise import Exercise
+from app.models.user import User
+from app.models.progress import UserSkillProgress, LessonAttempt, ExerciseAttempt, DailyActivity
 
 def seed(session: Session) -> None:
-    # -------------------------------------------------------------- course
     course = Course(language="Spanish", title="Spanish for Beginners",
                      description="Learn Spanish from scratch.")
     session.add(course)
@@ -63,7 +52,6 @@ def seed(session: Session) -> None:
         skills.append(s)
         prev_skill_id = s.id
 
-    # ------------------------------------------------------------ lessons
     def add_exercises(lesson: Lesson, items: list[dict]) -> None:
         for i, item in enumerate(items, start=1):
             session.add(Exercise(
@@ -126,7 +114,6 @@ def seed(session: Session) -> None:
         },
     ])
 
-    # Other skills get seeded simple lessons
     for skill in skills[1:]:
         lesson = Lesson(skill_id=skill.id, order=1, type=LessonType.NORMAL, xp_reward=10)
         session.add(lesson)
@@ -146,7 +133,6 @@ def seed(session: Session) -> None:
             },
         ])
 
-    # -------------------------------------------------------- achievements
     ach_streak_3 = Achievement(name="On a Roll", description="Reach a 3-day streak",
                                 icon="flame", criteria_type="streak", criteria_value=3)
     ach_first_skill = Achievement(name="First Steps", description="Complete your first skill",
@@ -154,7 +140,6 @@ def seed(session: Session) -> None:
     session.add_all([ach_streak_3, ach_first_skill])
     session.flush()
 
-    # -------------------------------------------------------------- users
     demo = User(username="Ankit", email="Ankit@example.com",
                 password_hash="not-a-real-hash", total_xp=40, gems=500,
                 hearts=5, max_hearts=5, daily_xp_goal=30)
@@ -197,11 +182,12 @@ def seed(session: Session) -> None:
 
 def main() -> None:
     engine = create_engine(DATABASE_URL, echo=False)
-    Base.metadata.drop_all(engine) # Start fresh
+    # Import models here to make sure they are registered on Base before dropping/creating
+    import app.models
+    Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
     with Session(engine) as session:
         seed(session)
-
 
 if __name__ == "__main__":
     main()

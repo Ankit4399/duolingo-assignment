@@ -3,20 +3,12 @@ from typing import Any, Optional
 
 HEART_REGEN_INTERVAL = timedelta(minutes=30)
 
-
-# ---------------------------------------------------------------------------
-# Hearts
-# ---------------------------------------------------------------------------
-
 def compute_hearts(
     stored_hearts: int,
     max_hearts: int,
     hearts_last_lost_at: Optional[datetime],
     now: datetime,
 ) -> tuple[int, Optional[datetime]]:
-    """
-    Returns (current_hearts, next_regen_at).
-    """
     if stored_hearts >= max_hearts or hearts_last_lost_at is None:
         return max_hearts if stored_hearts >= max_hearts else stored_hearts, None
 
@@ -32,14 +24,7 @@ def compute_hearts(
     return current, next_regen_at
 
 
-# ---------------------------------------------------------------------------
-# Streak
-# ---------------------------------------------------------------------------
-
 def compute_streak(activity_dates: list[date], today: date) -> int:
-    """
-    activity_dates: list of dates with activity met.
-    """
     if not activity_dates:
         return 0
 
@@ -62,17 +47,7 @@ def is_daily_goal_met(xp_earned_today: int, daily_goal: int) -> bool:
     return xp_earned_today >= daily_goal
 
 
-# ---------------------------------------------------------------------------
-# Answer checking
-# ---------------------------------------------------------------------------
-
 def check_answer(exercise_type: str, user_answer: Any, correct_answer: Any) -> bool:
-    """
-    Comparison rules per exercise type:
-    - multiple_choice / fill_blank / type_answer: case-insensitive string match, trimmed.
-    - translate: order-sensitive list of strings, case-insensitive.
-    - match_pairs: order-INsensitive list of [a, b] pairs.
-    """
     if exercise_type in ("multiple_choice", "fill_blank", "type_answer"):
         if not isinstance(user_answer, str) or not isinstance(correct_answer, str):
             return False

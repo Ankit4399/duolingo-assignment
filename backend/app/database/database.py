@@ -1,21 +1,15 @@
-# pyrefly: ignore [missing-import]
 from sqlalchemy import create_engine
-# pyrefly: ignore [missing-import]
 from sqlalchemy.orm import sessionmaker, Session
+from app.core.config import DATABASE_URL
+from app.models.base import Base
 
-from models import Base
-
-DATABASE_URL = "sqlite:///./duolingo.db"
-
-# check_same_thread=False is required for SQLite + FastAPI's threaded
-# request handling. Safe here because we open one Session per request.
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-
 def init_db() -> None:
+    # Import models here to make sure they are registered on Base before metadata.create_all
+    import app.models
     Base.metadata.create_all(bind=engine)
-
 
 def get_db() -> Session:
     db = SessionLocal()

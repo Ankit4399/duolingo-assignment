@@ -6,4 +6,5 @@ pip install --upgrade pip
 pip install -r requirements.txt
 
 # Seed the database on first deploy
-python seed.py
+python -m app.database.seed
+
